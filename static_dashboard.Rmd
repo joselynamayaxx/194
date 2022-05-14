@@ -1,0 +1,75 @@
+---
+title: "Average Daily Traffic"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+# Page 1
+
+https://gisdata-csj.opendata.arcgis.com/datasets/CSJ::average-daily-traffic.csv?outSR=%7B%22latestWkid%22%3A2227%2C%22wkid%22%3A102643%7D
+
+## Column {data-width="650"}
+
+
+
+```{r}
+indata <- read.csv("C:\\Users\\josel\\Documents\\Downloads\\Average_Daily_Traffic.csv")
+```
+
+## Column {data-width="350"}
+
+### 
+
+```{r}
+summary(indata$CITY)
+```
+
+
+```{r}
+hist(indata$ADT)
+```
+
+
+
+```{r}
+hist(indata$ADTONE)
+```
+
+# Page 2
+
+## Column {data-width="650"}
+
+##Row
+
+```{r}
+plot(indata$LATITUDE)
+```
+
+## Row
+
+Table 1
+
+```{r}
+knitr::kable(head(indata$ADTONE))
+```
+
+## row {.tabset}
+
+### Dataset
+
+# Page 3
+
+## Column {data-width="650"}
+
+##Row
+
+```{r}
+plot(indata$LONGITUDE)
+```
+

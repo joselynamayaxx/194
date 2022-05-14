@@ -1,0 +1,129 @@
+---
+title: "RAnalysis"
+output: html_notebook
+---
+
+1) Background: 
+  
+The data includes This dataset contains Average Daily Traffic (ADT) counts collected for the City of San Jose for the previous 15 years  ADT values are then given as:  ‘ADT One’ and ‘ADT Two’ which correspond to the ADT collected in the recorded travel directions. ‘ADT’ corresponds to the total ADT which is a sum of ‘ADT One’ and ‘ADT Two.’ Data is published on Mondays on a weekly basis. I was interesting in understanding how the city of San Jose measured the daily traffic and what correlations will be found. 
+
+  - How big is it: 
+  8162 rows  13 columns.
+  - How many numeric variables: 
+  There are  4 numeric variables 
+  - How many categorical variables:
+  There are  9 categorical variables 
+  
+
+```{r}
+library(tidyverse)
+
+indata <- read.csv("C:\\Users\\josel\\Documents\\Downloads\\Average_Daily_Traffic.csv")
+ 
+dim (indata)
+str (indata)
+```
+
+ Are there any missing values?
+ There aren't any missing values.
+ 
+  
+```{r}
+is.data.frame(indata) 
+
+is_tibble(indata)
+
+indata_tibble <- as_tibble(indata)
+is_tibble(indata_tibble)
+
+indata_tibble
+
+summary (indata_tibble)
+
+
+cleaned_data <- na.omit(indata_tibble)
+
+dim(cleaned_data)
+
+print(paste("Number of rows dropped due to missing values: ", dim(indata_tibble)[1] - dim (cleaned_data)[1]))
+```
+ 
+
+1399 ommitted duplicated
+ 
+
+```{r}
+duplicated(indata_tibble)
+```
+
+
+
+
+```{r}
+summary (indata_tibble)
+```
+
+
+Select one categorical variable, compute these statistics on a numeric variable by grouping on a categorical variable:
+
+categorical variable- Street one and the numerical variable- ADT
+
+
+
+
+```{r}
+indata_tibble %>% group_by(STREETONE) %>% summarise( count=n(), avg_ADT
+ = mean(ADT), stddev_ADT = sd(ADT), max_Distance= max(ADT), min_Distance= min (ADT))
+
+```
+
+2) Descriptive analysis: 
+
+
+
+```{r}
+indata_tibble %>% filter(STREETONE == "LEIGH AVE" ) %>% ggplot() + geom_histogram(mapping = aes(x=ADT), binwidth = function(x) 2*IQR(x)/ length(x)^(1/3))
+
+```
+
+ Relationship between variables:
+
+Since R is 0.97 it means that the correlation is linear and positive. 2.2e-16 as the p value would indicate a significant result, meaning that the actual p value is even smaller than 2.2e-16 (a typical threshold is 0.05, anything smaller counts as statistically significant).
+
+
+```{r}
+install.packages("ggpubr")
+```
+
+```{r}
+library ("ggpubr")
+ggscatter(indata_tibble, x="ADTONE", y= "ADTTWO", add= "reg.line", conf.int= TRUE, cor.coef= TRUE, cor.method = "pearson", xlab = "ADTONE", ylab= "ADTTWO")
+```
+
+
+```{r}
+cor.test(indata_tibble$ADTONE, indata_tibble$ADTTWO, )
+```
+
+3. Hypothesis Testing:
+
+  H0: The two variables are independent.
+  H1: The two variables are not independent.
+
+- Since the p-value is less than 0.05, we reject the null hypothesis. This means we have sufficient evidence to say that there is an association between ADTONE and ADTTWO 
+
+
+
+```{r}
+stu_data= table (indata_tibble$LATITUDE, indata_tibble$LONGITUDE)
+print (stu_data)
+```
+```{r}
+chisq.test(stu_data, correct = FALSE)
+```
+
+4. Summary: 
+
+The variables displayed correlation and or dependence on each other
+
+In accordance to the Chi Squared test and two tailed hypothesis testing. 
